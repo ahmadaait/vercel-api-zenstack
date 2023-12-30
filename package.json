@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npx tsx watch api/app.ts",
+    "vercel-build": "zenstack generate && tsc && prisma db push && tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
