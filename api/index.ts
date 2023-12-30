@@ -19,6 +19,19 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
+//* ----------------------------------------------------> START SWAGGER SECTION
+// Vercel can't properly serve the Swagger UI CSS from its npm package, here we
+// load it from a public location
+const options = {
+  customCssUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.css',
+};
+const spec = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../petstore-api.json'), 'utf8')
+);
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(spec, options));
+//* ----------------------------------------------------> END SWAGGER SECTION
+
 //* ----------------------------------------------------> START FUNCTION SECTION
 function getUser(req: Request) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -51,19 +64,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 //* ----------------------------------------------------> END ENDPOINT SECTION
-
-//* ----------------------------------------------------> START SWAGGER SECTION
-// Vercel can't properly serve the Swagger UI CSS from its npm package, here we
-// load it from a public location
-const options = {
-  customCssUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.css',
-};
-const spec = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '../petstore-api.json'), 'utf8')
-);
-app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(spec, options));
-//* ----------------------------------------------------> END SWAGGER SECTION
 
 //* ----------------------------------------------------> START API HANDLER SECTION
 const apiHandler = RestApiHandler({ endpoint: 'http://localhost:3000/api' });
